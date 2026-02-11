@@ -16,17 +16,17 @@ int main(int argc, char **argv)
   
   int i, x;
 
-  for (i = 1; i < argc; i++){
+  /* for (i = 1; i < argc; i++){
     if (strcmp(argv[i], "x") == 0){
       x = dequeue_struct(&q);
       printf("dequeing %d\n", x);
     }else{
       //enqueue(&headPtr, &tailPtr, atoi(argv[i]));
-      enqueue_struct(&q, atoi(argv[i]));
+      enqueue_struct(& q, atoi(argv[i]));
     }
-  }
+  } */
 
-  /* for (i = 1; i < argc; i++) {
+  for (i = 1; i < argc; i++) {
     if (strcmp(argv[i], "x") == 0) {
       if (q.size > 0) {
         x = dequeue_struct(&q);
@@ -41,6 +41,6 @@ int main(int argc, char **argv)
 
   while (q.size > 0) {
     dequeue_struct(&q);
-  } */
+  } 
   return 0;
 }
