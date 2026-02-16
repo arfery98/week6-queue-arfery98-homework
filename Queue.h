@@ -1,36 +1,85 @@
-#include "Node.h"
+#ifndef QUEUE_H
+#define QUEUE_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+typedef struct node {
+  struct node* next;
+  int order_number; // namemenu
+  int q;            // quantitu
+} OrderNode;
+
+
 typedef struct {
-	NodePtr headPtr,tailPtr;
-	int size;
-}Queue;
+  OrderNode *head, *tail;
+  int size;
+} Queue;
 
-void enqueue_struct(Queue* q, int x){
-  Node *new_node=(Node*) malloc(sizeof(Node));
-  if(new_node){ 
 
-    new_node->data=x;
-    new_node->nextPtr=NULL;
-    if(q->headPtr==NULL) q->headPtr=new_node;
-    else (q->tailPtr)->nextPtr=new_node;       
+void enqueue_struct(Queue* q, int menu_id, int qty) {
 
-    q->tailPtr=new_node;
-    q->size++;
-  }
-}
+  OrderNode* new_node = (OrderNode*) malloc(sizeof(OrderNode));
+  if (new_node) { 
+    new_node->order_number = menu_id;
+    new_node->q = qty;
+    new_node->next = NULL;
 
-int dequeue_struct(Queue *q){
-  NodePtr t=q->headPtr;
-  if(t){
-    int value= t->data;
-
-    q->headPtr=t->nextPtr;
-    if(q->headPtr == NULL) { 
-      q->tailPtr = NULL;  
+      if (q->size == 0) {
+        q->head = new_node;
+      } else {
+        q->tail->next = new_node;
+      }
+        
+      q->tail = new_node;
+      q->size++;
+      printf("My order is %d\n", menu_id);
     }
-    free(t);
-    q->size--;
-    return value;
-  }
-  printf("Empty queue\n");
-  return 0;
 }
+
+int dequeue_struct(Queue *q, int customer_count) { //dequeue
+  OrderNode *t = q->head;
+  if (t) {
+    int menu_id = t->order_number;
+    int qty = t->q;
+    int price = 0;
+    char menu_name[50];
+
+    switch(menu_id) {
+      case 1: strcpy(menu_name, "Spaghetti Carbonara"); price = 150 * qty; break;
+      case 2: strcpy(menu_name, "Grilled Salmon"); price = 300 * qty; break;
+      case 3: strcpy(menu_name, "Caesar Salad"); price = 120 * qty; break;
+      case 4: strcpy(menu_name, "Beef Wellington"); price = 500 * qty; break;
+      default: strcpy(menu_name, "Unknown"); price = 0; break;
+      }
+
+      printf("Customer no: %d\n", customer_count);
+      printf("%s\n", menu_name);
+      printf("You have to pay %d\n", price);
+
+      int cash = 0;
+      while (cash < price) {
+        printf(":Cash:");
+        scanf("%d", &cash);
+        if (cash < price) printf("Not enough cash!\n");
+      }
+
+      printf("Thank you\n");
+      if (cash > price) {
+        printf("Change is:%d\n", cash - price);
+      }
+
+      q->head = t->next;
+      if (q->head == NULL) q->tail = NULL;
+        
+      free(t);
+      q->size--;
+      return menu_id;
+    }
+
+    printf("The queue is empty\n");
+    return -1;
+}
+#endif

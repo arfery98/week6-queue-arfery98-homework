@@ -1,4 +1,4 @@
-argument: main.c 
-	gcc main.c -o Q
-run: Q
-	./Q
+compile: main.c 
+	gcc main.c -o food
+run: food
+	./food

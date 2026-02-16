@@ -1,38 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "Node.h"
 #include "Queue.h"
 
-int main(int argc, char **argv)
-{
-  //NodePtr headPtr = NULL;
-  //NodePtr tailPtr = NULL;
+int main(int argc, char **argv) {
+    Queue q;
+    q.head = NULL;
+    q.tail = NULL;
+    q.size = 0;
+    
+    int customer_count = 1;
 
-  /* For struct Queue*/
-  Queue  q;
-  q.headPtr=NULL;
-  q.tailPtr=NULL;
-  q.size=0;
-  
-  int i, x;
+    if (argc < 2) {
+      printf("Usage: %s [menu_id and quantity] or [x to start]\n", argv[0]);
+      return 0;
+    }
 
-  for (i = 1; i < argc; i++) {
-    if (strcmp(argv[i], "x") == 0) {
-      if (q.size > 0) {
-        x = dequeue_struct(&q);
-        printf("dequeing %d\n", x);
+    for (int i = 1; i < argc; i++) {
+      if (strcmp(argv[i], "x") == 0) {
+            // bill
+        if (q.size > 0) {
+          dequeue_struct(&q, customer_count);
+          customer_count++;
         } else {
-        dequeue_struct(&q);
+          printf("No customer in queue.\n");
         }
       } else {
-        enqueue_struct(&q, atoi(argv[i]));
+        // menu aaa  quantity
+        int menu_id = atoi(argv[i]);
+        int qty = 1;
+            
+          if (i + 1 < argc && strcmp(argv[i+1], "x") != 0) {
+            qty = atoi(argv[i+1]);
+            i++; 
+          }
+        enqueue_struct(&q, menu_id, qty);
+      }
     }
-  }
 
-  while (q.size > 0) {
-    dequeue_struct(&q);
-  }
+    printf("==========================================\n");
+    printf("There are %d ppl left in the queue\n", q.size);
 
-  return 0;
+    // clearmem
+    while (q.size > 0) {
+      OrderNode *temp = q.head;
+      q.head = q.head->next;
+      free(temp);
+      q.size--;
+    }
+
+    return 0;
 }
